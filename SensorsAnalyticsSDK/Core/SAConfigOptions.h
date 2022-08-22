@@ -24,8 +24,11 @@
 
 @class SASecretKey;
 @class SASecurityPolicy;
+@class SAFlowData;
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef void(^SAFlowFlushCustomRequest)(SAFlowData *input, void(^completion)(BOOL success));
 
 /**
  * @class
@@ -125,6 +128,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL disableDeviceId;
 
 - (void)registerStorePlugin:(id<SAStorePlugin>)plugin;
+
+/// 自定义flush request操作
+/// 会拦截SAFlushInterceptor 中的请求
+@property (nonatomic, copy, nullable) SAFlowFlushCustomRequest customRequst;
 
 @end
 

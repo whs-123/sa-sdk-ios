@@ -137,6 +137,7 @@ static const NSUInteger kSASessionMaxInterval = 5 * 60;
     options.eventSessionTimeout = self.eventSessionTimeout;
     options.disableDeviceId = self.disableDeviceId;
 
+    options.customRequst = self.customRequst;
 #if TARGET_OS_IOS
     // 支持 https 自签证书
     options.securityPolicy = [self.securityPolicy copy];
