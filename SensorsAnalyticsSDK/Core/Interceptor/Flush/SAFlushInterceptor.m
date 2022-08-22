@@ -63,26 +63,6 @@ NSString * const kSAFlushServerURL = @"serverURL";
 
     // 当在程序终止或 debug 模式下，使用线程锁
     BOOL isWait = input.configOptions.flushBeforeEnterBackground || input.configOptions.debugMode != SensorsAnalyticsDebugOff;
-    SAFlowFlushCustomRequest customRequest = input.configOptions.customRequst;
-    
-    // 自定义请求
-    if (customRequest != nil) {
-        __weak typeof(self) weakSelf = self;
-        customRequest(input, ^(BOOL success) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            input.flushSuccess = success;
-            if (isWait) {
-                dispatch_semaphore_signal(strongSelf.flushSemaphore);
-            } else {
-                completion(input);
-            }
-        });
-        if (isWait) {
-            dispatch_semaphore_wait(self.flushSemaphore, DISPATCH_TIME_FOREVER);
-            completion(input);
-        }
-        return;
-    }
     [self requestWithInput:input completion:^(BOOL success) {
         input.flushSuccess = success;
         if (isWait) {
@@ -138,6 +118,13 @@ NSString * const kSAFlushServerURL = @"serverURL";
         completion(flushSuccess);
     };
 
+    SAFlowFlushCustomRequest customRequest = input.configOptions.customRequst;
+    
+    // 自定义请求
+    if (customRequest != nil) {
+        customRequest(input.json, handler);
+        return;
+    }
     NSURLRequest *request = [self buildFlushRequestWithInput:input];
     NSURLSessionDataTask *task = [SAHTTPSession.sharedInstance dataTaskWithRequest:request completionHandler:handler];
     [task resume];

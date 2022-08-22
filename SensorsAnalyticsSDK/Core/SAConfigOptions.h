@@ -28,7 +28,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^SAFlowFlushCustomRequest)(SAFlowData *input, void(^completion)(BOOL success));
+typedef void(^SAFlowFlushCustomRequest)(NSString *input, void(^completion)(NSData * _Nullable data, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error));
 
 /**
  * @class
